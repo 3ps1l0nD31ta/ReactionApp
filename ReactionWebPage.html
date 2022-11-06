@@ -7,7 +7,8 @@
          var experimentActive = false; var testActive = false;
          var times = new Array();
          var lastTimeColorChanged;
-         
+         var colours = ["red","yellow","blue"];
+
          function startExperiment() {
          	experimentActive = true; 
          	document.getElementById("time").innerHTML = "";
@@ -26,7 +27,7 @@
          
          function showStimulus() { 
          	testActive = true;
-         	changeTextColor("red");
+         	changeTextColor(colours[Math.floor(Math.random()*colours.length)]);
          }
          
          function stopTest() {
