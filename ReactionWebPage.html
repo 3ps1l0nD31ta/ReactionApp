@@ -60,7 +60,8 @@
          }
          function changeTextColor(newColor) { 
          	document.getElementById("text").style.color = newColor; 
-         	document.getElementById("text").style.backgroundColor = newColor; 
+         	document.getElementById("text").style.backgroundColor = newColor;
+            document.body.style.background = newColor;
          	lastTimeColorChanged = new Date().getTime();
          }
          
