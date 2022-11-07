@@ -1,8 +1,10 @@
 var experimentActive = false; var testActive = false;
 var times = new Array();
 var lastTimeColorChanged;
-var colours = ["red","yellow","blue"];
+var colours = ["red","blue"];
 var colourData = new Array();
+var currColour = 0;
+
 for(var i = 0;i < colours.length;i++)
 {
    colourData.push(new ColourData(colours[i]));
@@ -11,6 +13,21 @@ function ColourData(colour)
 {
    this.colour = colour;
    this.values = new Array();
+   this.meanDeltaTime;
+   this.standardDerivation;
+   this.calculateData = function(){
+   	this.meanDeltaTime = 0.0;
+		for (var i = 0; i < this.values.length; ++i) {
+			this.meanDeltaTime += this.values[i]; 
+		}
+		this.meanDeltaTime = Math.round(this.meanDeltaTime / this.values.length);
+		this.standardDerivation = 0.0;
+		for (var i = 0; i < this.values.length; ++i) {
+			var diff = (this.values[i] - this.meanDeltaTime);
+			this.standardDerivation += diff * diff; 
+		}
+		this.standardDerivation =  Math.round(Math.sqrt(this.standardDerivation / this.values.length));
+   }
 }
 function startExperiment() {
 	experimentActive = true; 
@@ -30,14 +47,17 @@ function startTest() {
 
 function showStimulus() { 
 	testActive = true;
-	changeTextColor(colours[Math.floor(Math.random()*colours.length)]);
+	currColour = Math.floor(Math.random()*colours.length);
+	changeTextColor(colours[currColour]);
 }
 
 function stopTest() {
+	
 	var currTime = new Date().getTime();
 	var deltaTime = currTime - lastTimeColorChanged; 
-	times.push(deltaTime); 
-	document.getElementById("time").innerHTML = deltaTime + "ms"; 
+	
+	colourData[currColour].values.push(deltaTime);
+	times.push(deltaTime);
 	testActive = false;
 	startTest();
 }
@@ -53,10 +73,18 @@ function stopExperiment() {
 	for (var i = 0; i < times.length; ++i) {
 		var diff = (times[i] - meanDeltaTime);
 		standardDerivation += diff * diff; }
-	standardDerivation =  Math.round(Math.sqrt(standardDerivation / times.length)); 
+	standardDerivation =  Math.round(Math.sqrt(standardDerivation / times.length));
+	for(var i = 0;i < colourData.length;i++)
+	{
+		colourData[i].calculateData();
+	}
 	document.getElementById("count").innerHTML = "Count: " + times.length; 
 	document.getElementById("mean").innerHTML = "Mean: " + meanDeltaTime + "ms"; 
 	document.getElementById("sd").innerHTML = "SD: " + standardDerivation + "ms"; 
+	document.getElementById("instruction").innerHTML = "Press SPACE to start!"; 
+	document.getElementById("count").innerHTML = "Count: " + colourData[0].values.length; 
+	document.getElementById("mean").innerHTML = "Mean: " + colourData[0].meanDeltaTime + "ms"; 
+	document.getElementById("sd").innerHTML = "SD: " + colourData[0].standardDerivation + "ms"; 
 	document.getElementById("instruction").innerHTML = "Press SPACE to start!"; 
 	times = [];
 	experimentActive = false; 
