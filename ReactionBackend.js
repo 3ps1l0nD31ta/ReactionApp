@@ -82,9 +82,9 @@ function stopExperiment() {
 	document.getElementById("mean").innerHTML = "Mean: " + meanDeltaTime + "ms"; 
 	document.getElementById("sd").innerHTML = "SD: " + standardDerivation + "ms"; 
 	document.getElementById("instruction").innerHTML = "Press SPACE to start!"; 
-	document.getElementById("count").innerHTML = "Count: " + colourData[0].values.length; 
-	document.getElementById("mean").innerHTML = "Mean: " + colourData[0].meanDeltaTime + "ms"; 
-	document.getElementById("sd").innerHTML = "SD: " + colourData[0].standardDerivation + "ms"; 
+	document.getElementById("count").innerHTML = "Count for "+ colourData[0].colour + ":" + colourData[0].values.length + ". Count for "+ colourData[1].colour + ":" + colourData[1].values.length; 
+	document.getElementById("mean").innerHTML = "Mean for "+ colourData[0].colour + ":" + colourData[0].meanDeltaTime + "ms" + ". Mean for "+ colourData[1].colour + ":" + colourData[1].meanDeltaTime + "ms"; 
+	document.getElementById("sd").innerHTML = "SD for "+ colourData[0].colour + ":" + colourData[0].standardDerivation + "ms" + "SD for "+ colourData[1].colour + ":" + colourData[1].standardDerivation + "ms"; 
 	document.getElementById("instruction").innerHTML = "Press SPACE to start!"; 
 	times = [];
 	experimentActive = false; 
