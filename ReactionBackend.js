@@ -1,13 +1,27 @@
 var experimentActive = false; var testActive = false;
 var times = new Array();
 var lastTimeColorChanged;
-var colours = ["red","blue"];
+var colours = ["red","blue","green","yellow","grey"];
 var colourData = new Array();
 var currColour = 0;
-
+var textFile = null;
 for(var i = 0;i < colours.length;i++)
 {
    colourData.push(new ColourData(colours[i]));
+}
+function CreateTextFile(text)
+{
+	var data = new Blob([text], {type: 'text/plain'});
+
+    // If we are replacing a previously generated file we need to
+    // manually revoke the object URL to avoid memory leaks.
+    if (textFile !== null) {
+      window.URL.revokeObjectURL(textFile);
+    }
+
+    textFile = window.URL.createObjectURL(data);
+
+    return textFile;
 }
 function ColourData(colour)
 {
@@ -41,7 +55,7 @@ function startExperiment() {
 
 function startTest() {
 	changeTextColor("black");
-	timeInSeconds = Math.random() * 4 + 2; // 2 - 6s 
+	timeInSeconds = Math.random() * 1 + 0; // 2 - 6s 
 	window.setTimeout("showStimulus()", timeInSeconds * 1000);
 }
 
@@ -78,14 +92,17 @@ function stopExperiment() {
 	{
 		colourData[i].calculateData();
 	}
-	document.getElementById("count").innerHTML = "Count: " + times.length; 
-	document.getElementById("mean").innerHTML = "Mean: " + meanDeltaTime + "ms"; 
-	document.getElementById("sd").innerHTML = "SD: " + standardDerivation + "ms"; 
-	document.getElementById("instruction").innerHTML = "Press SPACE to start!"; 
-	document.getElementById("count").innerHTML = "Count for "+ colourData[0].colour + ":" + colourData[0].values.length + ". Count for "+ colourData[1].colour + ":" + colourData[1].values.length; 
-	document.getElementById("mean").innerHTML = "Mean for "+ colourData[0].colour + ":" + colourData[0].meanDeltaTime + "ms" + ". Mean for "+ colourData[1].colour + ":" + colourData[1].meanDeltaTime + "ms"; 
-	document.getElementById("sd").innerHTML = "SD for "+ colourData[0].colour + ":" + colourData[0].standardDerivation + "ms" + "SD for "+ colourData[1].colour + ":" + colourData[1].standardDerivation + "ms"; 
-	document.getElementById("instruction").innerHTML = "Press SPACE to start!"; 
+	outputText = "NAME,COUNT,MEAN,SD\n";
+	for(var i = 0;i<colourData.length;i++)
+	{
+		outputText = outputText.concat(colours[i]+", " + colourData[i].values.length+", "+colourData[i].meanDeltaTime+", "+colourData[i].standardDerivation+"\n");
+	}
+	var create = document.getElementById('downloadData');
+	create.addEventListener('click',function(){
+		var link = document.getElementById('downloadlink');
+    	link.href = CreateTextFile(outputText);
+    	link.style.display = 'block';
+	},false);
 	times = [];
 	experimentActive = false; 
 }
