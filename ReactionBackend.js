@@ -55,7 +55,7 @@ function startExperiment() {
 
 function startTest() {
 	changeTextColor("black");
-	timeInSeconds = Math.random() * 1 + 0; // 2 - 6s 
+	timeInSeconds = Math.random() * 4 + 2; // 2 - 6s 
 	window.setTimeout("showStimulus()", timeInSeconds * 1000);
 }
 
